@@ -140,3 +140,7 @@ _(nt) = I don't actually anticipate implementing this, but I would if given enou
 - Downloaded bootstrap and sass for quick styling
 - Changed Colors so my eyes don't hurt looking at it
 - Implement custom colors, fonts, and logo
+- Make it mobile friendly
+- Give shadows to buttons, inner shadows to non-clickable
+- Create Interfaces
+- Refactor types, pages, components

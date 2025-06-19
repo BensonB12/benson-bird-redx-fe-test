@@ -1,27 +1,24 @@
+import type { User } from "~/models/user";
 import { db } from "../lib/db";
 
 export async function loader() {
   try {
-    let users: any;
-    let totalCount: any;
-    
-    users = await db.user.findMany({
+    const users: User[] = await db.user.findMany({
       select: {
         id: true,
         name: true,
         email: true,
         createdAt: true,
+        updatedAt: true,
       },
       orderBy: {
         createdAt: "desc",
       },
     });
-    totalCount = users.length;
 
     return Response.json({
       success: true,
       users: users,
-      totalCount: totalCount,
       message: "All users returned",
     });
   } catch (error) {
@@ -34,4 +31,4 @@ export async function loader() {
       { status: 500 }
     );
   }
-} 
+}
