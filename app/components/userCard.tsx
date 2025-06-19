@@ -33,10 +33,9 @@ export const UserCard: FC<{ user: User; index: number }> = ({
             {(() => {
               try {
                 return new Date(
-                  user.createdAt
-                  // >= user.updatedAt
-                  //   ? user.createdAt
-                  //   : user.updatedAt
+                  user.createdAt >= user.updatedAt && user.updatedAt
+                    ? user.createdAt
+                    : user.updatedAt
                 ).toLocaleDateString();
               } catch {
                 return "Unknown";
