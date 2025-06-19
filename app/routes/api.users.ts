@@ -1,6 +1,7 @@
 import type { User } from "~/models/user";
 import { db } from "../lib/db";
 import { LRUCache } from "lru-cache";
+import type { LoaderFunction, LoaderFunctionArgs } from "react-router";
 
 const cache = new LRUCache<string, User[]>({
   max: 100,
@@ -9,7 +10,7 @@ const cache = new LRUCache<string, User[]>({
 
 // We could have an endpoint to clear the cache if we put the info in the headers
 
-export async function loader() {
+export const loader: LoaderFunction = async () => {
   const cacheKey = "allUsers";
 
   if (cache.has(cacheKey)) {
@@ -20,7 +21,6 @@ export async function loader() {
       JSON.stringify({
         success: true,
         users: cache.get(cacheKey),
-        cached: true,
         message: "Returned from cache",
       })
     );
@@ -57,4 +57,4 @@ export async function loader() {
       { status: 500 }
     );
   }
-}
+};

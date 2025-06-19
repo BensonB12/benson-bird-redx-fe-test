@@ -3,12 +3,13 @@ import type { User } from "~/models/user";
 import { useGetPeopleQuery } from "~/hooks/userHooks";
 import { ErrorPage } from "~/components/errorPage";
 import { EmptyLeadsPage } from "~/components/emptyLeadsPage";
-import { LoadingPage } from "~/components/loadingPage";
 import { UserCard } from "~/components/userCard";
 import { NoMatches } from "~/components/noMatches";
 import { SearchStats } from "~/components/searchStats";
 import { SearchBar } from "~/components/searchBar";
 import { RedxHeader } from "~/components/redxHeader";
+import { Spinner } from "~/components/spinner";
+import { useSearchParams } from "react-router";
 
 // I'm not in love with the function sharing the file with the component,
 // but this is the only file it will be used
@@ -30,9 +31,16 @@ const filterDownUsersCasingDoesNotMatter = (
 
 export default function Home() {
   const { users, loading, error } = useGetPeopleQuery();
-  const [search, setSearch] = useState<string>("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const paramSearch = searchParams.get("username") || "";
+  const [search, setSearch] = useState<string>(paramSearch);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const isMounted = useRef(false);
+
+  useEffect(() => {
+    if (search) setSearchParams({ username: search });
+    else setSearchParams({});
+  }, [search, setSearchParams]);
 
   useEffect(() => {
     // I think a good user feedback would have a spinner show while we are debouncing
@@ -48,7 +56,6 @@ export default function Home() {
     return () => clearTimeout(debounceHandler);
   }, [search, users]);
 
-  if (loading) return <LoadingPage />;
   if (error) return <ErrorPage error={error} />;
   if (users.length <= 0) return <EmptyLeadsPage />;
 
@@ -60,21 +67,27 @@ export default function Home() {
         <section className="p-4 space-y-4">
           <SearchBar search={search} setSearch={setSearch} />
 
-          <SearchStats
-            search={search}
-            filteredUsersCount={filteredUsers.length}
-            totalUsers={users.length}
-          />
+          {loading || (filteredUsers.length === 0 && search === "") ? (
+            <Spinner />
+          ) : (
+            <div>
+              <SearchStats
+                search={search}
+                filteredUsersCount={filteredUsers.length}
+                totalUsers={users.length}
+              />
 
-          <section className="mx-auto md:flex md:flex-wrap md:gap-4 justify-center">
-            {filteredUsers.map((user: User, index: number) => {
-              return <UserCard user={user} index={index} />;
-            })}
+              <section className="mx-auto md:flex md:flex-wrap md:gap-4 justify-center">
+                {filteredUsers.map((user: User, index: number) => {
+                  return <UserCard user={user} index={index} />;
+                })}
 
-            {filteredUsers.length === 0 && (
-              <NoMatches search={search} setSearch={setSearch} />
-            )}
-          </section>
+                {filteredUsers.length === 0 && (
+                  <NoMatches search={search} setSearch={setSearch} />
+                )}
+              </section>
+            </div>
+          )}
         </section>
       </div>
     </main>

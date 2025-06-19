@@ -59,10 +59,9 @@ export const useGetPeopleQuery = (): UseGetPeopleQueryResult => {
 
       setUsers(users);
       setLoading(false);
+      localStorage.setItem("users", JSON.stringify(users));
     })();
   }, []);
-
-  localStorage.setItem("users", JSON.stringify(users));
 
   return { users, loading, error };
 };

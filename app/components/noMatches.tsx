@@ -5,7 +5,7 @@ export const NoMatches: FC<{
   setSearch: (search: string) => void;
 }> = ({ search, setSearch }) => {
   return (
-    <section className="p-6 bg-red-200 text-center rounded inset-shadow-sm inset-shadow-red-500/50">
+    <section className="mt-4 p-6 bg-red-200 text-center rounded inset-shadow-sm inset-shadow-red-500/50">
       <div className="mb-2 text-black">
         <i className="bi-emoji-frown-fill me-1" /> no leads found for "{search}"
       </div>

@@ -48,6 +48,7 @@
 
 _(mb) = Mentioned Before in a previous list_  
 _(nt) = I don't actually anticipate implementing this, but I would if given enough time, or I thought it was a higher importance for this test/dem_
+_Crossed out todo's was future me looking back and relining that it didn't need to be implemented_
 
 ### TypeScript best practices
 
@@ -118,7 +119,7 @@ _(nt) = I don't actually anticipate implementing this, but I would if given enou
 
 ### Database enhancements
 
-- Add an id/index to each row
+- ~~Add an id/index to each row~~
 - The name: 'updatedAt' is not clear
 
   There should be a one to many relation between 'user' and 'updatedAt' (Therefore creating another table)
@@ -147,8 +148,15 @@ _(nt) = I don't actually anticipate implementing this, but I would if given enou
 - Debouncing the search
 - Browser caching
 - Server caching
+- It is not on my list, but pagination I am feeling like is the last big push for effectiveness and scalable code
 
 ## Tasks I would do with more time (in order-ish), or maybe re-evaluated the infustracture/needs in a different way
 
+- Using 'suspense'. I am familiar with it in 'suspenseQueries' but not quite confodent to utilize it well here. I need more research/time to implement the 'suspense' advantages of React Router V7
+- Tests. Both unit and integration tests are the next thing. I think they are very important, but because no where did it mention tests, and tests do take up a good chunk of time... I chose pagination over them.
+- Rate limiting. I would have use LRUCache to keep track of IP's and then turned them away if they broke our limit
+- Create a form to edit users. I initially had this idea when making each user a card that is clickable (they are just links to email them) and I would use zod and conform to make it quicker and easier. Ultimately I would have spent a lot of time creating endpoints, and I was having a lot of fun learning/enhancing my UX/UI skills.
+  - The form would look like a pencil icon they would click, and it would pop out into a modal
+- Maybe changing the 'user' variable names to 'lead' because the audience is looking at these as 'leads'. I decided not to change to leads in the dev mode because attribute wise — they are more of users. I also look at this like I am working on code attached to more, and the highest dictator would be consistency throughout.
 - As seen in comments, I also didn't do caching that tells the client what the server is caching
 - Skipped Redis, it would be awesome scalability wise, making distributed systems very happy and sharing cache, but that is too big for the time I have
