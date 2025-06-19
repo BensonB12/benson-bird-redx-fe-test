@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import redxLogo from "./../assets/redx_logo.png";
 
 export default function Home() {
   const [data, setData] = useState<any>([]);
@@ -13,10 +14,10 @@ export default function Home() {
       try {
         setLoading(true);
         setError(null);
-        
-        const response = await fetch('/api/users?client=true');
+
+        const response = await fetch("/api/users?client=true");
         const result = await response.json();
-        
+
         if (response.ok) {
           setData(result.users);
           setCount(result.users.length);
@@ -38,9 +39,15 @@ export default function Home() {
       let results: any = [];
       for (let i = 0; i < data.length; i++) {
         const user = data[i];
-        if (user.name && user.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
+        if (
+          user.name &&
+          user.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+        ) {
           results.push(user);
-        } else if (user.email && user.email.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
+        } else if (
+          user.email &&
+          user.email.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+        ) {
           results.push(user);
         }
       }
@@ -54,75 +61,78 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div style={{padding: '20px'}}>
-        <div style={{border: '3px solid red', padding: '15px', backgroundColor: 'yellow'}}>
-          <div style={{fontSize: '25px', color: 'purple'}}>LOADING...</div>
-          <div style={{fontSize: '12px'}}>please wait</div>
-        </div>
-      </div>
+      <main className="p-5 bg-white h-screen">
+        <section className="p-4 bg-primary rounded-md">
+          <h2 className="font-serif text-white text-2xl font-bold">
+            LOADING USERS...
+          </h2>
+          <p className="text-xs text-zinc-200">Thank you for being patient</p>
+        </section>
+      </main>
     );
   }
 
   if (error) {
+    console.log(error);
     return (
-      <div style={{padding: '20px'}}>
-        <div style={{border: '5px solid black', padding: '25px', backgroundColor: 'red', color: 'white'}}>
-          <div style={{fontSize: '35px'}}>💀</div>
-          <div style={{fontSize: '20px'}}>SOMETHING WENT WRONG!!!</div>
-          <div>{error}</div>
-          <button 
+      <main className="p-5 bg-white h-screen">
+        <section className="text-center p-6 bg-red-600 text-white rounded-md">
+          <h2 className="text-xl font-semibold">
+            <i className="bi-exclamation-triangle me-1" />
+            Oops! Something on our side went wrong
+            <i className="bi-exclamation-triangle ms-1" />
+          </h2>
+          <button
             onClick={() => {
               setError(null);
               setLoading(true);
               window.location.reload();
-            }} 
-            style={{padding: '10px', marginTop: '10px', backgroundColor: 'orange', border: '2px solid black'}}
+            }}
+            className="mt-4 px-4 py-2 text-red-100 bg-zinc-600 hover:bg-zinc-700 rounded"
           >
-            CLICK TO TRY AGAIN
+            click me to try again
           </button>
-        </div>
-      </div>
+        </section>
+      </main>
     );
   }
 
-  return (
-    <div style={{padding: '5px', fontFamily: 'Times New Roman', backgroundColor: '#f0f0f0'}}>
-      <div style={{textAlign: 'center', marginBottom: '15px', border: '4px solid blue', padding: '10px', backgroundColor: 'lightgreen'}}>
-        <div style={{fontSize: '28px', fontWeight: 'bold', color: 'darkblue', textShadow: '2px 2px 0px yellow'}}>
-          REDX Frontend Test
-        </div>
-        <div style={{fontSize: '11px', color: 'red', fontStyle: 'italic'}}>
-          React Router v7 + API + Search
-        </div>
-      </div>
+  if (data.length <= 0) return <span>😞 NO USERS EXIST</span>;
 
-      <div>
-        <div style={{marginBottom: '10px',border: '2px dashed green',padding: '8px',backgroundColor: '#ffff99'}}>
-          <div style={{marginBottom: '3px', fontWeight: 'bold', color: 'darkgreen'}}>SEARCH USERS HERE:</div>
-          <div>
-            <input
-              type="text"
-              placeholder="type to search..."
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
-              style={{
-                width: '280px',
-                padding: '8px',
-                border: '3px solid orange',
-                backgroundColor: 'white',
-                fontSize: '14px',
-                marginRight: '5px'
-              }}
-            />
+  return (
+    <main className="bg-white h-screen">
+      <header className="grid bg-primary grid-cols-2 p-4">
+        <div>
+          <img className="h-24" src={redxLogo} alt="REDX Logo" />
+        </div>
+        <div className="font-serif my-auto">
+          <h1 className="text-white text-xl font-bold">Frontend Test</h1>
+        </div>
+        <p className="text-white text-sm col-span-2 mt-2">
+          <i className="bi-pencil me-1" />
+          Updated by Benson Bird
+        </p>
+      </header>
+
+      <section className="p-4 space-y-4">
+        <div>
+          <div className="flex items-center gap-2 mt-2">
+            <div className="relative w-full max-w-xs">
+              <i className="bi-search absolute left-3 top-1/2 -translate-y-1/2 text-white text-sm pointer-events-none" />
+              <input
+                type="text"
+                placeholder=" type to search the users..."
+                value={search}
+                maxLength={25}
+                onChange={(e) => setSearch(e.target.value)}
+                className="bg-black rounded px-3 py-2 pl-9 text-white w-full"
+              />
+            </div>
             {search && (
-              <button 
-                type="button" 
-                onClick={() => {
-                  setSearch("");
-                }}
-                style={{padding: '8px 12px', backgroundColor: 'pink', border: '2px solid red', fontSize: '12px'}}
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="rounded px-4 py-2 bg-blue-600 text-white hover:bg-blue-700"
               >
                 CLEAR
               </button>
@@ -130,127 +140,89 @@ export default function Home() {
           </div>
         </div>
 
-        <div style={{
-          marginBottom: '8px',
-          padding: '6px',
-          backgroundColor: 'lightblue',
-          border: search ? '3px solid purple' : '1px solid gray'
-        }}>
-          <div style={{fontWeight: 'bold', fontSize: '13px'}}>
+        <section className={`p-3 rounded bg-blue-200`}>
+          <div className="text-black">
             {search ? (
-              <span style={{color: 'darkred'}}>
-                FOUND: {filteredData.length} user{filteredData.length !== 1 ? "s" : ""} matching "{search}"
-                {filteredData.length !== data.length && (
-                  <span style={{color: 'blue'}}> (out of {data.length} total users)</span>
-                )}
+              <span>
+                {filteredData.length}/{data.length} user
+                {filteredData.length !== 1 ? "s" : ""} matching "{search}"
               </span>
             ) : (
-              <span style={{color: 'darkgreen'}}>
-                SHOWING: {data.length} total user{data.length !== 1 ? "s" : ""}
+              <span className="text-black">
+                <i className="bi-people" />
+                {data.length >= 1
+                  ? `${data.length} users shown`
+                  : "Only one user"}
               </span>
             )}
           </div>
-          <div style={{fontSize: '10px', color: 'gray', marginTop: '2px'}}>
-            API • Client search
-          </div>
-        </div>
+        </section>
 
-        <div style={{border: '4px solid black', backgroundColor: 'white'}}>
-          <div style={{
-            display: 'flex',
-            backgroundColor: '#87CEEB',
-            fontWeight: 'bold',
-            borderBottom: '2px solid black',
-            fontSize: '14px'
-          }}>
-            <div style={{width: '180px', padding: '12px', borderRight: '2px solid black', textAlign: 'center', backgroundColor: '#FFB6C1'}}>
+        <section className="border-4 border-black bg-white rounded overflow-hidden">
+          <header className="flex bg-blue-900 text-white font-bold text-sm">
+            <div className="w-44 p-3 border-r border-white text-center bg-red-600">
               👤 NAME
             </div>
-            <div style={{width: '220px', padding: '12px', borderRight: '2px solid black', textAlign: 'center', backgroundColor: '#98FB98'}}>
-              📧 EMAIL
+            <div className="w-56 p-3 border-r border-white text-center bg-blue-500">
+              <i className="bi-envelope-fill me-1" />
+              EMAIL
             </div>
-            <div style={{width: '140px', padding: '12px', textAlign: 'center', backgroundColor: '#DDA0DD'}}>
-              📅 CREATED
-            </div>
-          </div>
+            <div className="w-36 p-3 text-center bg-black">📅 CREATED</div>
+          </header>
 
           {filteredData.map((user: any, index: any) => {
-            const bgColor = index % 2 === 0 ? '#FFFFFF' : '#F0F0F0';
-            const nameColor = user.name ? 'black' : 'red';
-            
+            const rowColor = index % 2 === 0 ? "bg-white" : "bg-blue-50";
+            const nameColor = user.name ? "text-black" : "text-red-600";
+
             return (
-              <div 
+              <article
                 key={user.id + "_" + index}
-                style={{
-                  display: 'flex',
-                  backgroundColor: bgColor,
-                  borderBottom: '1px dotted gray',
-                  fontSize: '12px'
-                }}
+                className={`flex border-b border-gray-300 text-xs ${rowColor}`}
               >
-                <div style={{width: '180px', padding: '6px', borderRight: '1px solid gray'}}>
-                  <span style={{fontWeight: 'bold', color: nameColor}}>
+                <div className="w-44 p-2 border-r border-gray-300">
+                  <span className={`font-semibold ${nameColor}`}>
                     {user.name || "NO NAME FOUND"}
                   </span>
                 </div>
-                <div style={{width: '220px', padding: '6px', borderRight: '1px solid gray'}}>
-                  <span style={{color: 'blue', textDecoration: 'underline'}}>
-                    {user.email}
-                  </span>
+                <div className="w-56 p-2 border-r border-gray-300">
+                  <span className="text-blue-700 underline">{user.email}</span>
                 </div>
-                <div style={{width: '140px', padding: '6px'}}>
-                  <span style={{fontSize: '10px', color: 'gray'}}>
-                    {(() => {
-                      try {
-                        return new Date(user.createdAt).toLocaleDateString();
-                      } catch (e) {
-                        return "Invalid Date";
-                      }
-                    })()}
-                  </span>
+                <div className="w-36 p-2 text-gray-600 text-xs">
+                  {(() => {
+                    try {
+                      return new Date(user.createdAt).toLocaleDateString();
+                    } catch {
+                      return "Invalid Date";
+                    }
+                  })()}
                 </div>
-              </div>
+              </article>
             );
           })}
 
           {filteredData.length === 0 && (
-            <div style={{
-              padding: '25px',
-              textAlign: 'center',
-              backgroundColor: '#FFB6C1',
-              border: '3px solid red',
-              fontSize: '16px'
-            }}>
-              <div style={{fontWeight: 'bold', marginBottom: '8px', color: 'darkred'}}>
-                {search ? (
-                  <span>
-                    😞 NO USERS FOUND FOR "{search}"
-                  </span>
-                ) : (
-                  <span>😞 NO USERS EXIST</span>
-                )}
+            <section className="p-6 text-center border-t-4 border-red-500 text-base">
+              <div className="font-bold mb-2 text-black">
+                <span>
+                  <i className="bi-emoji-frown-fill me-1" /> no users found for
+                  "{search}"
+                </span>
               </div>
               {search && (
-                <button 
+                <button
                   onClick={() => {
                     setSearch("");
                     doFilter("");
                   }}
-                  style={{
-                    padding: '8px 15px',
-                    backgroundColor: 'yellow',
-                    border: '2px solid black',
-                    fontSize: '12px',
-                    cursor: 'pointer'
-                  }}
+                  className="px-4 py-2 mt-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
                 >
-                  CLEAR SEARCH TO SEE ALL USERS
+                  clear search to see all users
                 </button>
               )}
-            </div>
+            </section>
           )}
-        </div>
-      </div>
-    </div>
+        </section>
+      </section>
+    </main>
   );
 }

@@ -134,3 +134,9 @@ _(nt) = I don't actually anticipate implementing this, but I would if given enou
 - Put in links to other pages that help this page (_nt_)
   - Cookie crumbs (_nt_)
   - Links to other pages we have on the site that is reasonably connected to this page (_nt_)
+
+## Tasks In Order
+
+- Downloaded bootstrap and sass for quick styling
+- Changed Colors so my eyes don't hurt looking at it
+- Implement custom colors, fonts, and logo

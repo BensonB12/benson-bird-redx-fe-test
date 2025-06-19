@@ -1,15 +1,33 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import "bootstrap-icons/font/bootstrap-icons.css";
 @import "tailwindcss";
 
+/*
+- For some reason I was not able to figure this out
 @theme {
-  --font-sans: ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --color-primary: 203 21 0;
+  --color-white: 235 221 222;
+  --color-black: 37 33 33;
+}
+*/
+
+.bg-primary {
+  background-color: #cb1500;
+}
+
+.bg-white {
+  background-color: #ebebeb;
+}
+
+.bg-black {
+  background-color: #252121;
 }
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100;
+  @apply font-sans bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100;
+}
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
+h1 {
+  @apply text-4xl;
 }
