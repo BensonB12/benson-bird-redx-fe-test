@@ -144,3 +144,4 @@ _(nt) = I don't actually anticipate implementing this, but I would if given enou
 - Give shadows to buttons, inner shadows to non-clickable
 - Create Interfaces
 - Refactor types, pages, components
+- Debouncing the search

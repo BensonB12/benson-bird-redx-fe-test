@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { User } from "~/models/user";
 import { useGetPeopleQuery } from "~/hooks/userHooks";
 import { ErrorPage } from "~/components/errorPage";
@@ -32,9 +32,20 @@ export default function Home() {
   const { users, loading, error } = useGetPeopleQuery();
   const [search, setSearch] = useState<string>("");
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const isMounted = useRef(false);
 
   useEffect(() => {
-    setFilteredUsers(filterDownUsersCasingDoesNotMatter(search, users));
+    // I think a good user feedback would have a spinner show while we are debouncing
+    // their search input, but it might be a bit much
+    const debounceHandler = setTimeout(() => {
+      if (isMounted.current) {
+        setFilteredUsers(filterDownUsersCasingDoesNotMatter(search, users));
+      } else {
+        setFilteredUsers(filterDownUsersCasingDoesNotMatter(search, users));
+        isMounted.current = true;
+      }
+    }, 700);
+    return () => clearTimeout(debounceHandler);
   }, [search, users]);
 
   if (loading) return <LoadingPage />;
