@@ -1,27 +1,50 @@
+import type { User } from "~/models/user";
 import { db } from "../lib/db";
+import { LRUCache } from "lru-cache";
+import type { LoaderFunction, LoaderFunctionArgs } from "react-router";
 
-export async function loader() {
+const cache = new LRUCache<string, User[]>({
+  max: 100,
+  ttl: 1000 * 60 * 5, // 5 minutes
+});
+
+// We could have an endpoint to clear the cache if we put the info in the headers
+
+export const loader: LoaderFunction = async () => {
+  const cacheKey = "allUsers";
+
+  if (cache.has(cacheKey)) {
+    // There is reason to user headers to inform the client it was cached,
+    // but I think this is good enough for now
+    console.log("Cache hit for all users");
+    return new Response(
+      JSON.stringify({
+        success: true,
+        users: cache.get(cacheKey),
+        message: "Returned from cache",
+      })
+    );
+  }
+
   try {
-    let users: any;
-    let totalCount: any;
-    
-    users = await db.user.findMany({
+    const users: User[] = await db.user.findMany({
       select: {
         id: true,
         name: true,
         email: true,
         createdAt: true,
+        updatedAt: true,
       },
       orderBy: {
-        createdAt: "desc",
+        updatedAt: "desc",
       },
     });
-    totalCount = users.length;
+
+    cache.set(cacheKey, users);
 
     return Response.json({
       success: true,
       users: users,
-      totalCount: totalCount,
       message: "All users returned",
     });
   } catch (error) {
@@ -34,4 +57,4 @@ export async function loader() {
       { status: 500 }
     );
   }
-} 
+};
