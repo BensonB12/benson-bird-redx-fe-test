@@ -145,3 +145,10 @@ _(nt) = I don't actually anticipate implementing this, but I would if given enou
 - Create Interfaces
 - Refactor types, pages, components
 - Debouncing the search
+- Browser caching
+- Server caching
+
+## Tasks I would do with more time (in order-ish), or maybe re-evaluated the infustracture/needs in a different way
+
+- As seen in comments, I also didn't do caching that tells the client what the server is caching
+- Skipped Redis, it would be awesome scalability wise, making distributed systems very happy and sharing cache, but that is too big for the time I have

@@ -8,6 +8,14 @@ export interface UseGetPeopleQueryResult {
   error: string | null;
 }
 
+interface CacheEntry {
+  timestamp: number;
+  data: User[];
+}
+
+const CACHE_KEY = "peopleCache";
+const CACHE_TTL = 1000 * 60 * 5; // 5 mins
+
 // I am used to using react-query if that was not obvious, but I want to communicate that I understand this well
 export const useGetPeopleQuery = (): UseGetPeopleQueryResult => {
   const [users, setUsers] = useState<User[]>([]);
@@ -19,6 +27,23 @@ export const useGetPeopleQuery = (): UseGetPeopleQueryResult => {
       setLoading(true);
       setError(null);
 
+      const localStorageJson = localStorage.getItem(CACHE_KEY);
+      if (localStorageJson) {
+        try {
+          const { timestamp, data }: CacheEntry = JSON.parse(localStorageJson);
+          if (Date.now() - timestamp < CACHE_TTL) {
+            setUsers(data);
+            setLoading(false);
+            return;
+          }
+        } catch {
+          console.error(
+            "Failed to parse localStorage cache:",
+            localStorageJson
+          );
+        }
+      }
+
       const users = await userService.getUsers();
 
       if (!users) {
@@ -27,10 +52,17 @@ export const useGetPeopleQuery = (): UseGetPeopleQueryResult => {
         return;
       }
 
+      localStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({ timestamp: Date.now(), data: users })
+      );
+
       setUsers(users);
       setLoading(false);
     })();
   }, []);
+
+  localStorage.setItem("users", JSON.stringify(users));
 
   return { users, loading, error };
 };
