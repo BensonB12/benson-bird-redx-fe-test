@@ -62,9 +62,9 @@ export default function Home() {
   if (loading) {
     return (
       <main className="p-5 bg-white min-h-screen">
-        <section className="p-4 bg-primary rounded-md">
+        <section className="p-4 bg-primary inset-shadow-sm inset-shadow-blue-900/50 rounded">
           <h2 className="font-serif text-white text-2xl font-bold">
-            LOADING USERS...
+            LOADING LEADS...
           </h2>
           <p className="text-xs text-zinc-200">Thank you for being patient</p>
         </section>
@@ -76,7 +76,7 @@ export default function Home() {
     console.log(error);
     return (
       <main className="p-5 bg-white min-h-screen">
-        <section className="text-center p-6 bg-red-600 text-white rounded-md">
+        <section className="text-center p-6 bg-red-600 text-white rounded inset-shadow-sm inset-shadow-red-900/50">
           <h2 className="text-xl font-semibold">
             <i className="bi-exclamation-triangle me-1" />
             Oops! Something on our side went wrong
@@ -88,7 +88,7 @@ export default function Home() {
               setLoading(true);
               window.location.reload();
             }}
-            className="mt-4 px-4 py-2 text-red-100 bg-zinc-600 hover:bg-zinc-700 rounded"
+            className="mt-4 px-4 py-2 text-red-100 bg-zinc-600 hover:bg-zinc-700 rounded shadow-md/50 "
           >
             click me to try again
           </button>
@@ -100,9 +100,9 @@ export default function Home() {
   if (data.length <= 0)
     return (
       <main className="p-5 bg-white min-h-screen">
-        <section className="text-center p-6 bg-red-600 text-white rounded-md">
+        <section className="text-center p-6 bg-red-600 text-white inset-shadow-sm inset-shadow-red-900/50 rounded">
           <h2 className="text-xl font-semibold">
-            <i className="bi-emoji-frown-fill me-1" /> NO USERS EXIST
+            <i className="bi-emoji-frown-fill me-1" /> NO LEADS EXIST
           </h2>
         </section>
       </main>
@@ -111,14 +111,16 @@ export default function Home() {
   return (
     <main className="flex flex-col min-h-screen bg-white">
       <div className="grow">
-        <header className="grid bg-primary grid-cols-2 p-4">
-          <div>
-            <img className="h-24" src={redxLogo} alt="REDX Logo" />
-          </div>
+        <header className="md:grid bg-primary md:grid-cols-2 p-4">
+          <img
+            className="h-24 mx-auto md:mx-0"
+            src={redxLogo}
+            alt="REDX Logo"
+          />
           <div className="font-serif my-auto">
-            <h1 className="text-white text-xl font-bold">Frontend Test</h1>
+            <h1 className="text-white text-xl font-bold">Full Stack Test</h1>
           </div>
-          <p className="text-white col-span-2 mt-2">
+          <p className="text-xs md:text-sm text-white col-span-2 mt-2">
             <i className="bi-pencil me-1" />
             Updated by Benson Bird
           </p>
@@ -131,7 +133,7 @@ export default function Home() {
                 <i className="bi-search absolute left-3 top-1/2 -translate-y-1/2 text-white pointer-events-none" />
                 <input
                   type="text"
-                  placeholder=" type to search the users..."
+                  placeholder=" type to search the leads..."
                   value={search}
                   maxLength={25}
                   onChange={(e) => setSearch(e.target.value)}
@@ -155,60 +157,63 @@ export default function Home() {
             <div className="text-black">
               {search ? (
                 <span>
-                  {filteredData.length}/{data.length} user
+                  {filteredData.length}/{data.length} lead
                   {filteredData.length !== 1 ? "s" : ""} matching "{search}"
                 </span>
               ) : (
                 <span className="text-black">
                   <i className="bi-people" />
                   {data.length >= 1
-                    ? `${data.length} users shown`
-                    : "Only one user"}
+                    ? `${data.length} leads shown`
+                    : "Only one lead"}
                 </span>
               )}
             </div>
           </section>
 
-          <section className="mx-auto flex flex-wrap gap-4 justify-center">
+          <section className="mx-auto md:flex md:flex-wrap md:gap-4 justify-center">
             {filteredData.map((user: any, index: any) => {
               const nameColor = user.name ? "text-black" : "text-red-600";
 
               return (
                 <article
+                  className="bg-blue-50 m-4 rounded shadow-md/50 transition-shadow duration-200 hover:shadow-xl"
                   key={user.id + "_" + index}
-                  className="flex shadow-md/50 rounded p-2 m-4"
                 >
-                  <div className="w-56 pt-2">
-                    <span className={`font-semibold ${nameColor}`}>
-                      <i className="bi-file-earmark-person me-1" />
-                      {user.name || "Unknown"}
-                    </span>
-                    <div className="w-75 pb-2">
-                      <a
-                        href={`mailto:${user.email}`}
-                        className="text-blue-700 underline"
+                  <a
+                    href={`mailto:${user.email}`}
+                    className="p-3 md:flex md:shadow-md/50 transition-shadow duration-200 hover:shadow-xl"
+                  >
+                    <div className="ps-4 md:w-56 md:pt-2">
+                      <span
+                        className={`text-center md:text-right font-semibold truncate ${nameColor}`}
                       >
+                        <i className="bi-file-earmark-person me-1" />
+                        {user.name || "Unknown"}
+                      </span>
+                      <div className="pe-4 md:w-68 md:pb-2 text-blue-700 truncate">
                         <i className="bi-envelope me-1" />
                         {user.email}
-                      </a>
+                      </div>
                     </div>
-                  </div>
-                  <div className="w-40 p-2 text-black text-end rounded">
-                    <i className="bi-calendar-check me-1" /> last updated at
-                    <br />
-                    {(() => {
-                      try {
-                        return new Date(
-                          user.createdAt
-                          // >= user.updatedAt
-                          //   ? user.createdAt
-                          //   : user.updatedAt
-                        ).toLocaleDateString();
-                      } catch {
-                        return "Unknown";
-                      }
-                    })()}
-                  </div>
+                    <div className="ps-4 md:w-40 md:p-2 text-black md:text-end rounded">
+                      <i className="bi-calendar-check" /> last updated at
+                      <span className="ms-1 md:ms-0 md:block">
+                        {(() => {
+                          try {
+                            return new Date(
+                              user.createdAt
+                              // >= user.updatedAt
+                              //   ? user.createdAt
+                              //   : user.updatedAt
+                            ).toLocaleDateString();
+                          } catch {
+                            return "Unknown";
+                          }
+                        })()}
+                      </span>
+                    </div>
+                  </a>
                 </article>
               );
             })}
@@ -216,7 +221,7 @@ export default function Home() {
             {filteredData.length === 0 && (
               <section className="p-6 bg-red-200 text-center rounded inset-shadow-sm inset-shadow-red-500/50">
                 <div className="mb-2 text-black">
-                  <i className="bi-emoji-frown-fill me-1" /> no users found for
+                  <i className="bi-emoji-frown-fill me-1" /> no leads found for
                   "{search}"
                 </div>
                 {search && (
@@ -227,7 +232,7 @@ export default function Home() {
                     }}
                     className="shadow-md/50  px-4 py-2 mt-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                   >
-                    clear search to see all users
+                    clear search to see all leads
                   </button>
                 )}
               </section>
